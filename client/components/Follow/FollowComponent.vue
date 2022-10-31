@@ -2,8 +2,8 @@
     <article
       class="follow"
     >
-        <section v-if="$store.state.follows.includes(this.author)">
-            <button @click="createFollow">
+        <section v-if="this.isFollowing">
+            <button @click="deleteFollow">
             🗑️ Unfollow
             </button>
         </section>
@@ -32,26 +32,48 @@ export default {
     name: "FollowComponent",
     props: {
         author: {
-            type: Object,
+            type: String,
             required: true,
         }
     },
     data() {
       return {
+        isFollowing: null,
         alerts: {} // Displays success/error messages encountered during comment modification
       };
+    },
+    mounted() {
+        this.isFollowing = this.$store.state.follows.includes(this._props.author);
+        console.log(this.isFollowing);
     },
     methods: {
         createFollow() {
             const params = {
+                url: `/api/follows/${this._props.author}`,
                 method: 'POST',
                 callback: (res) => {
                     this.$store.commit('alert', {
                     message: 'Successfully followed user!', status: 'success'
                     });
-                    this.$store.commit('addFollow', res.follow);
+                    this.$store.commit('addFollow', res.follow.followedUser);
                 }
-            }
+            };
+            this.request(params);
+            this.isFollowing = true;
+        },
+        deleteFollow() {
+            const params = {
+                url: `/api/follows/${this._props.author}`,
+                method: 'DELETE',
+                callback: (res) => {
+                    this.$store.commit('alert', {
+                    message: 'Successfully unfollowed user!', status: 'success'
+                    });
+                    this.$store.commit('removeFollow', this._props.author);
+                }
+            };
+            this.request(params);
+            this.isFollowing = false;
         },
         async request(params) {
         /**
@@ -68,7 +90,7 @@ export default {
         }
   
         try {
-          const r = await fetch(`/api/follows/${this.author._id}`, options);
+          const r = await fetch(params.url, options);
           if (!r.ok) {
             const res = await r.json();
             throw new Error(res.error);
@@ -83,7 +105,7 @@ export default {
         }
       }
     }
-}
+};
 </script>
 
 <style scoped>

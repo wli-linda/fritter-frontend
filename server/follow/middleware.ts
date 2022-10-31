@@ -8,7 +8,7 @@ import FollowCollection from '../follow/collection';
  */
  const isFollowerUserExists = async (req: Request, res: Response, next: NextFunction) => {
   const id = req.params.followerId;
-  const user = await UserCollection.findOneByUserId(id);
+  const user = await UserCollection.findOneByUsername(id);
   if (!user) {
     res.status(404).json({
       error: {
@@ -25,7 +25,7 @@ import FollowCollection from '../follow/collection';
  */
  const isFollowedUserExists = async (req: Request, res: Response, next: NextFunction) => {
   const id = req.params.followedId;
-  const user = await UserCollection.findOneByUserId(id);
+  const user = await UserCollection.findOneByUsername(id);
   if (!user) {
     res.status(404).json({
       error: {
@@ -42,14 +42,13 @@ import FollowCollection from '../follow/collection';
  */
 const isFollowExists = async (req: Request, res: Response, next: NextFunction) => {
   const followerId = req.params.followerId || req.session.userId;
-  const followedId = req.params.followedId;
-  const validFormat1 = Types.ObjectId.isValid(followerId);
-  const validFormat2 = Types.ObjectId.isValid(followedId)
-  const follow = (validFormat1 && validFormat2) ? await FollowCollection.findOne(followerId, followedId) : '';
+  const followedUser = await UserCollection.findOneByUsername(req.params.followedId as string);
+  const followedId = followedUser._id;
+  const follow = await FollowCollection.findOne(followerId, followedId);
   if (!follow) {
     res.status(412).json({
       error: {
-        followNotFound: `Follow with follow ID ${req.params.followId} does not exist.`
+        followNotFound: `$User ${followerId} does not follow user ${followedId}.`
       }
     });
     return;

@@ -46,8 +46,12 @@ const store = new Vuex.Store({
        */
       state.freets = freets;
     },
-    addFollow(state, follow) {
-      state.follows.push(follow);
+    addFollow(state, followedUser) {
+      state.follows.push(followedUser);
+    },
+    removeFollow(state, followedUser) {
+      const index = state.follows.indexOf(followedUser);
+      state.follows.splice(index, 1);
     },
     async refreshFreets(state) {
       /**
@@ -56,6 +60,12 @@ const store = new Vuex.Store({
       const url = state.filter ? `/api/users/${state.filter}/freets` : '/api/freets';
       const res = await fetch(url).then(async r => r.json());
       state.freets = res;
+    },
+    async refreshFollows(state) {
+      const url = '/api/follows/followed';
+      const res = await fetch(url).then(async r => r.json());
+      state.follows = res;
+      console.log("follows", state.follows);
     }
   },
   // Store data across page refreshes, only discard on browser close

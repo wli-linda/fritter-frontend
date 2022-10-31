@@ -1,5 +1,6 @@
 import type {NextFunction, Request, Response} from 'express';
 import express from 'express';
+import UserCollection from '../user/collection';
 import FollowCollection from './collection';
 // import TierCollection from '../tier/collection';
 import * as userValidator from '../user/middleware';
@@ -8,6 +9,28 @@ import * as util from './util';
 import { constructFreetResponse } from '../freet/util';
 
 const router = express.Router();
+
+/**
+ * Get all followed users
+ *
+ * @name GET /api/follows/followed
+ *
+ * @return {FollowResponse[]} - The array of followed users
+ * @throws {403} - If the user is not logged in
+ */
+ router.get(
+  '/followed',
+  [
+    userValidator.isUserLoggedIn
+  ],
+  async (req: Request, res: Response) => {
+    const userId = req.session.userId as string;
+    const followed = await FollowCollection.findAllByUserId(userId);
+    const followResponse = followed.map(util.constructFollowResponse);
+    const followedUsernames = followResponse.map(follow => follow.followedUser);
+    res.status(200).json(followedUsernames);
+  }
+);
 
 /**
  * Get freets of all followed users
@@ -87,7 +110,9 @@ router.post(
   ],
   async (req: Request, res: Response) => {
     const followerId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
-    const follow = await FollowCollection.addOne(followerId, req.params.followedId as string);
+    const followedUser = await UserCollection.findOneByUsername(req.params.followedId as string);
+    const followedId = followedUser._id;
+    const follow = await FollowCollection.addOne(followerId, followedId);
 
     res.status(201).json({
       message: 'Your follow was created successfully.',
@@ -115,7 +140,8 @@ router.delete(
   ],
   async (req: Request, res: Response) => {
     const followerId = req.session.userId as string;
-    const followedId = req.params.followedId as string;
+    const followedUser = await UserCollection.findOneByUsername(req.params.followedId as string);
+    const followedId = followedUser._id;
     // TierCollection.deleteFromTimedFollowers(followedId, followerId);
     const follow = await FollowCollection.findOne(followerId, followedId) // won't be undefined bc isFollowExists
     await FollowCollection.deleteOne(follow._id.toString());

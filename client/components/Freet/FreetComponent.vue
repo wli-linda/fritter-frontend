@@ -35,6 +35,9 @@
           🗑️ Delete
         </button>
       </div>
+      <div v-if="$store.state.username">
+        <FollowComponent v-bind:author="freet.author"/>
+      </div>
     </header>
     <textarea
       v-if="editing"
@@ -67,9 +70,11 @@
 
 <script>
 import CommentSectionComponent from '@/components/Comment/CommentSectionComponent.vue';
+import FollowComponent from '@/components/Follow/FollowComponent.vue';
+
 export default {
   name: 'FreetComponent',
-  components: {CommentSectionComponent},
+  components: {CommentSectionComponent, FollowComponent},
   props: {
     // Data from the stored freet
     freet: {

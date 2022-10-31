@@ -9,8 +9,8 @@ class FollowCollection {
   /**
    * Follow another user
    *
-   * @param {string} followerId - The id of the post of the follow
-   * @param {string} followedId - The id of the author of the follow
+   * @param {string} followerId - The id of the follower of the follow
+   * @param {string} followedId - The id of the followed of the follow
    * @return {Promise<HydratedDocument<Follow>>} - The newly created Follow
    */
   static async addOne(followerId: Types.ObjectId | string, followedId: Types.ObjectId | string): 
@@ -26,16 +26,43 @@ class FollowCollection {
   }
 
   /**
+   * Follow another user by username
+   *
+   * @param {string} follower - The username of the follower of the follow
+   * @param {string} followed - The username of the followed of the follow
+   * @return {Promise<HydratedDocument<Follow>>} - The newly created Follow
+   */
+   static async addOneByUsername(follower: string, followed: string): Promise<HydratedDocument<Follow>> {
+    const followerId = (await UserCollection.findOneByUsername(follower)).id;
+    const followedId = (await UserCollection.findOneByUsername(followed)).id;
+    return this.addOne(followerId, followedId);
+   }
+
+  /**
    * Find whether user 1 follows user 2
    *
-   * @param {string} followerId - The id of the post of the follow
-   * @param {string} followedId - The id of the author of the follow
-   * @return {Promise<HydratedDocument<Follow>>} - The newly created Follow
+   * @param {string} followerId - The id of the follower of the follow
+   * @param {string} followedId - The id of the followed of the follow
+   * @return {Promise<HydratedDocument<Follow>>} - The relevant Follow
    */
    static async findOne(followerId: Types.ObjectId | string, followedId: Types.ObjectId | string): 
    Promise<HydratedDocument<Follow>> {
     return FollowModel.findOne({followerId: followerId, followedId: followedId}).populate('followerId').populate('followedId');
    }
+
+  /**
+   * Find whether user 1 follows user 2 by username
+   *
+   * @param {string} follower - The username of the follower of the follow
+   * @param {string} followed - The username of the followed of the follow
+   * @return {Promise<HydratedDocument<Follow>>} - The relevant Follow
+   */
+    static async findOneByUsername(follower: string, followed: string): 
+    Promise<HydratedDocument<Follow>> {
+      const followerId = (await UserCollection.findOneByUsername(follower))._id;
+      const followedId = (await UserCollection.findOneByUsername(followed))._id;
+      return this.findOne(followerId, followedId);
+    }
 
   /**
    * Get all the followed list of a user
@@ -47,6 +74,17 @@ class FollowCollection {
     const user = await UserCollection.findOneByUserId(userId);
     return FollowModel.find({followerId: user._id}).populate('followerId').populate('followedId');
   }
+
+  // /**
+  //  * Get all the followed list of a user by username
+  //  *
+  //  * @param {string} username - The username of the user
+  //  * @return {Promise<HydratedDocument<Follow>[]>} - An array of all of the followed of the user
+  //  */
+  //  static async findAllByUsername(username: string): Promise<Array<HydratedDocument<Follow>>> {
+  //   const user = await UserCollection.findOneByUsername(username);
+  //   return this.findAllByUserId(user.id);
+  // }
 
   /**
    * Get all the freets from the followed list of a user
@@ -68,6 +106,17 @@ class FollowCollection {
       res = res.concat(freets);
     }
     return res
+  }
+
+  /**
+   * Get all the freets from the followed list of a user by username
+   *
+   * @param {string} username - The username of the user
+   * @return {Promise<HydratedDocument<Freet>[]>} - An array of all of the followed's freets of the user
+   */
+  static async findAllFreetsByFollowedByUsername(username: string): Promise<Array<HydratedDocument<Freet>>> {
+    const user = await UserCollection.findOneByUsername(username);
+    return this.findAllFreetsByFollowed(user.id);
   }
 
   /**
