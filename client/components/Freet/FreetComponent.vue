@@ -61,12 +61,15 @@
         <p>{{ alert }}</p>
       </article>
     </section>
+    <CommentSectionComponent v-bind:freet="freet"/>
   </article>
 </template>
 
 <script>
+import CommentSectionComponent from '@/components/Comment/CommentSectionComponent.vue';
 export default {
   name: 'FreetComponent',
+  components: {CommentSectionComponent},
   props: {
     // Data from the stored freet
     freet: {
