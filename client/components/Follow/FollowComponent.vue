@@ -2,7 +2,7 @@
     <article
       class="follow"
     >
-        <section v-if="this.isFollowing">
+        <section v-if="this.$store.state.follows.includes(this._props.author)">
             <button @click="deleteFollow">
             🗑️ Unfollow
             </button>
@@ -25,8 +25,6 @@
     </article>
   </template>
 
-<!-- vuex not very persistent, can store follow state in store -->
-
 <script>
 export default {
     name: "FollowComponent",
@@ -38,13 +36,8 @@ export default {
     },
     data() {
       return {
-        isFollowing: null,
         alerts: {} // Displays success/error messages encountered during comment modification
       };
-    },
-    mounted() {
-        this.isFollowing = this.$store.state.follows.includes(this._props.author);
-        console.log(this.isFollowing);
     },
     methods: {
         createFollow() {
@@ -55,17 +48,16 @@ export default {
                     this.$store.commit('alert', {
                     message: 'Successfully followed user!', status: 'success'
                     });
-                    this.$store.commit('addFollow', res.follow.followedUser);
+                    this.$store.commit('addFollow', this._props.author);
                 }
             };
             this.request(params);
-            this.isFollowing = true;
         },
         deleteFollow() {
             const params = {
                 url: `/api/follows/${this._props.author}`,
                 method: 'DELETE',
-                callback: (res) => {
+                callback: () => {
                     this.$store.commit('alert', {
                     message: 'Successfully unfollowed user!', status: 'success'
                     });
@@ -73,7 +65,6 @@ export default {
                 }
             };
             this.request(params);
-            this.isFollowing = false;
         },
         async request(params) {
         /**
@@ -98,7 +89,7 @@ export default {
   
           this.editing = false;
   
-          params.callback(res);
+          params.callback();
         } catch (e) {
           this.$set(this.alerts, e, 'error');
           setTimeout(() => this.$delete(this.alerts, e), 3000);
