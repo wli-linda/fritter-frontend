@@ -21,6 +21,7 @@
         </h3>
       </article>
     </section>
+    <CategoryTab />
     <section>
       <header>
         <div class="left">
@@ -62,13 +63,15 @@
 import FreetComponent from '@/components/Freet/FreetComponent.vue';
 import CreateFreetForm from '@/components/Freet/CreateFreetForm.vue';
 import GetFreetsForm from '@/components/Freet/GetFreetsForm.vue';
+import CategoryTab from '@/components/Category/CategoryTab.vue';
 
 export default {
   name: 'FreetPage',
-  components: {FreetComponent, GetFreetsForm, CreateFreetForm},
+  components: {FreetComponent, GetFreetsForm, CreateFreetForm, CategoryTab},
   mounted() {
     this.$refs.getFreetsForm.submit();
     this.$store.commit('refreshFollows');
+    this.$store.commit('refreshCategories');
   }
 };
 </script>

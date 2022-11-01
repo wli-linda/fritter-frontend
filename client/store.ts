@@ -12,7 +12,9 @@ const store = new Vuex.Store({
     filter: null, // Username to filter shown freets by (null = show all)
     freets: [], // All freets created in the app
     username: null, // Username of the logged in user
+    userId: null, // MongoDB object ID of the logged in user
     follows: [], // All users the logged in user follows
+    categories: [], // All categories the logged in user has created
     alerts: {} // global success/error messages encountered during submissions to non-visible forms
   },
   mutations: {
@@ -31,6 +33,13 @@ const store = new Vuex.Store({
        * @param username - new username to set
        */
       state.username = username;
+    },
+    setUserId(state, userId) {
+      /**
+       * Update the stored userId to the specified one.
+       * @param userId - new userId to set
+       */
+      state.userId = userId;
     },
     updateFilter(state, filter) {
       /**
@@ -66,6 +75,12 @@ const store = new Vuex.Store({
       const res = await fetch(url).then(async r => r.json());
       state.follows = res;
       console.log("follows", state.follows);
+    },
+    async refreshCategories(state) {
+      const url = `/api/categories/${state.userId}`;
+      const res = await fetch(url).then(async r => r.json());
+      state.categories = res;
+      console.log("categories", state.categories);
     }
   },
   // Store data across page refreshes, only discard on browser close

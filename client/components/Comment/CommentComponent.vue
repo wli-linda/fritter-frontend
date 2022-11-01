@@ -87,10 +87,6 @@
             const res = await r.json();
             throw new Error(res.error);
           }
-  
-          this.editing = false;
-        //   this.$store.commit('refreshComments');
-  
           params.callback();
         } catch (e) {
           this.$set(this.alerts, e, 'error');

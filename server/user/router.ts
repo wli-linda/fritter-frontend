@@ -1,5 +1,6 @@
 import type {Request, Response} from 'express';
 import express from 'express';
+import CategoryCollection from '../category/collection';
 import FollowCollection from '../follow/collection';
 import CommentCollection from '../comment/collection';
 import FreetCollection from '../freet/collection';
@@ -166,6 +167,7 @@ router.delete(
     await FreetCollection.deleteMany(userId);
     await CommentCollection.deleteManybyAuthor(userId);
     await FollowCollection.deleteManybyUser(userId);
+    await CategoryCollection.deleteManybyUser(userId);
     req.session.userId = undefined;
     res.status(200).json({
       message: 'Your account has been deleted successfully.'
