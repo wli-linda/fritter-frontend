@@ -24,3 +24,10 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+section {
+  display: flex;
+  flex-direction: row;
+}
+</style>
