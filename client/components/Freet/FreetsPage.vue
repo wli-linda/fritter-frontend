@@ -70,8 +70,10 @@ export default {
   components: {FreetComponent, GetFreetsForm, CreateFreetForm, CategoryTab},
   mounted() {
     this.$refs.getFreetsForm.submit();
-    this.$store.commit('refreshFollows');
-    this.$store.commit('refreshCategories');
+    if (this.$store.state.username) {
+      this.$store.commit('refreshFollows');
+      this.$store.commit('refreshCategories');
+    }
   }
 };
 </script>

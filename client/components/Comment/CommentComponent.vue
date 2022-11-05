@@ -99,9 +99,13 @@
   
   <style scoped>
   .comment {
-      border: 1px solid #111;
-      padding: 20px;
-      position: relative;
+    border: 1px solid rgb(71, 94, 44);
+    border-radius: 0.5em;
+    padding: 20px;
+    position: relative;
+    margin: 0.5em;
+    background-color: white;
+    box-shadow: 3px 3px;
   }
   </style>
   

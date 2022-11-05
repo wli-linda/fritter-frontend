@@ -42,8 +42,10 @@ export default {
         };
     },
     mounted() {
-        this.fetchAllFollowedFreets();
-        console.log(this.freetsInCategory);
+        if (this.$store.state.username) {
+            this.fetchAllFollowedFreets();
+            console.log(this.freetsInCategory);
+        }
     },
     methods: {
         fetchAllFollowedFreets() {
@@ -114,5 +116,9 @@ div {
 
 button {
     margin-right: 10px;
+}
+
+button:focus {
+  background-color: white;
 }
 </style>

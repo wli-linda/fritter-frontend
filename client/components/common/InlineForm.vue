@@ -51,7 +51,9 @@ form {
 }
 
 input {
-    padding: 0 5px;
+    font-family: inherit;
+    margin: 0.5em;
+    padding: 0.5em 0.5em;
     min-width: 200px;
 }
 </style>

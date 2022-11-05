@@ -44,7 +44,25 @@ body {
 }
 
 main {
-  padding: 0 5em 5em;
+  padding: 0 12em 5em;
+  background-color: rgb(233, 239, 236);
+  color: rgb(31, 81, 15);
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+button {
+  border: 1px rgb(31, 81, 15);
+  background-color: rgba(237, 246, 242, 0.536);
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  color: rgb(31, 81, 15);
+  padding: 0.75em;
+  margin: 0.5em;
+  box-shadow: 1px 1px rgba(32, 81, 15, 0.779);
+}
+
+button:hover {
+  background-color: white;
+  transition: 0.5s;
 }
 
 .alerts {
@@ -69,10 +87,10 @@ main {
 }
 
 .alerts .error {
-    background-color: rgb(166, 23, 33);
+    background-color: rgba(166, 23, 33, 0.667);
 }
 
 .alerts .success {
-    background-color: rgb(45, 135, 87);
+    background-color: rgba(45, 135, 87, 0.667);
 }
 </style>

@@ -42,16 +42,18 @@
 <style scoped>
 nav {
     padding: 1vw 2vw;
-    background-color: #ccc;
+    background-color: rgb(146, 198, 144);
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: relative;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 .title {
     font-size: 32px;
     margin: 0 5px;
+    color: rgb(31, 81, 15);;
 }
 
 img {
@@ -73,6 +75,7 @@ img {
 
 .right a {
     margin-left: 5px;
+    color: rgb(31, 81, 15);
 }
 
 .alerts {

@@ -1,20 +1,25 @@
 <template>
       <section>
-        <section v-if="$store.state.username">
-          <CreateCommentForm 
-            v-bind:freet="freet"
-            v-on:newComment="handleNewComment"
+        <button @click="toggleComments">
+          Show Comments
+        </button>
+        <section v-if="displayComments">
+          <section v-if="$store.state.username">
+            <CreateCommentForm 
+              v-bind:freet="freet"
+              v-on:newComment="handleNewComment"
+              />
+          </section>
+          <section
+            v-if="this.comments"
+          >
+            <CommentComponent
+              v-for="comment in this.comments"
+              :key="comment.id"
+              :comment="comment"
+              v-on:deleteComment="handleDeleteComment"
             />
-        </section>
-        <section
-          v-if="this.comments"
-        >
-          <CommentComponent
-            v-for="comment in this.comments"
-            :key="comment.id"
-            :comment="comment"
-            v-on:deleteComment="handleDeleteComment"
-          />
+          </section>
         </section>
       </section>
   </template>
@@ -35,6 +40,7 @@
     },
     data () {
       return {
+        displayComments: false,
         comments: null,
       }
     },
@@ -42,6 +48,9 @@
       this.submit();
     },
     methods: {
+      toggleComments() {
+        this.displayComments = !this.displayComments;
+      },
       async submit() {
         const url = `/api/comments/${this._props.freet._id}`;
         try {

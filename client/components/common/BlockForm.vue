@@ -97,7 +97,7 @@ export default {
           const text = await r.text();
           const res = text ? JSON.parse(text) : {user: null};
           this.$store.commit('setUsername', res.user ? res.user.username : null);
-          this.$store.commit('setUserId', user ? user._id : null);
+          this.$store.commit('setUserId', res.user ? res.user._id : null);
         }
 
         if (this.refreshFreets) {
@@ -118,13 +118,16 @@ export default {
 
 <style scoped>
 form {
-  border: 1px solid #111;
-  padding: 0.5rem;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  margin-bottom: 14px;
   position: relative;
+  border: 1px solid rgb(71, 94, 44);
+  border-radius: 0.5em;
+  margin: 0.5em;
+  background-color: white;
+    box-shadow: 3px 3px;
 }
 
 article > div {
@@ -148,5 +151,17 @@ form h3 {
 textarea {
    font-family: inherit;
    font-size: inherit;
+   margin-top: 0.5em;
+   margin-bottom: 0.5em;
+   padding: 0.5em;
+   border-radius: 0.5em;
+}
+
+input {
+   font-family: inherit;
+   margin-top: 0.5em;
+   margin-bottom: 0.5em;
+   padding: 0.5em;
+   border-radius: 0.5em;
 }
 </style>

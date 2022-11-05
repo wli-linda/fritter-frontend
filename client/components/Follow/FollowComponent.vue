@@ -2,7 +2,7 @@
     <article
       class="follow"
     >
-        <section v-if="this.$store.state.follows.includes(this._props.author)">
+        <section v-if="$store.state.follows.includes(this._props.author)">
             <button @click="deleteFollow">
             🗑️ Unfollow
             </button>
@@ -104,6 +104,9 @@ section {
 
 button {
     margin-right: 10px;
+    position: absolute;
+    right: 1em;
+    top: 2.5em;
 }
 
 </style>

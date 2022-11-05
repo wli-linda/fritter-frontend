@@ -53,7 +53,7 @@
     </p>
     <p class="info">
       Posted at {{ freet.dateModified }}
-      <i v-if="freet.edited">(edited)</i>
+      <i v-if="freet.dateCreated !== freet.dateModified">(edited)</i>
     </p>
     <section class="alerts">
       <article
@@ -176,8 +176,17 @@ export default {
 
 <style scoped>
 .freet {
-    border: 1px solid #111;
+    border: 1px solid rgb(71, 94, 44);
+    border-radius: 0.5em;
     padding: 20px;
     position: relative;
+    margin: 0.5em;
+    background-color: white;
+    box-shadow: 3px 3px;
+}
+
+.info {
+  color: rgba(32, 81, 15, 0.596);
+  font-size: 0.8em;
 }
 </style>
