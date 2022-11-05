@@ -127,7 +127,7 @@ form {
   border-radius: 0.5em;
   margin: 0.5em;
   background-color: white;
-    box-shadow: 3px 3px;
+  box-shadow: 3px 3px;
 }
 
 article > div {

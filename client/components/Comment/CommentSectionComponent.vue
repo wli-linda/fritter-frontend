@@ -4,12 +4,6 @@
           Show Comments
         </button>
         <section v-if="displayComments">
-          <section v-if="$store.state.username">
-            <CreateCommentForm 
-              v-bind:freet="freet"
-              v-on:newComment="handleNewComment"
-              />
-          </section>
           <section
             v-if="this.comments"
           >
@@ -19,6 +13,12 @@
               :comment="comment"
               v-on:deleteComment="handleDeleteComment"
             />
+          </section>
+          <section v-if="$store.state.username">
+            <CreateCommentForm 
+              v-bind:freet="freet"
+              v-on:newComment="handleNewComment"
+              />
           </section>
         </section>
       </section>

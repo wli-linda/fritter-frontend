@@ -7,7 +7,23 @@
         <h2>Welcome @{{ $store.state.username }}</h2>
       </header>
       <CreateFreetForm />
+
+      <div>
+        <button class="feedTab" @click="setDisplayCategories(false)">
+            All Freets
+        </button>
+        <button class="feedTab" @click="setDisplayCategories(true)">
+            Feed
+        </button>
+      </div>
+      <section v-if="displayCategories">
+        <CategoryTab />
+      </section>
+      <section v-else>
+        <AllFreetsTab />
+      </section>
     </section>
+
     <section v-else>
       <header>
         <h2>Welcome to Fritter!</h2>
@@ -20,59 +36,33 @@
           to create, edit, and delete freets.
         </h3>
       </article>
-    </section>
-    <CategoryTab />
-    <section>
-      <header>
-        <div class="left">
-          <h2>
-            Viewing all freets
-            <span v-if="$store.state.filter">
-              by @{{ $store.state.filter }}
-            </span>
-          </h2>
-        </div>
-        <div class="right">
-          <GetFreetsForm
-            ref="getFreetsForm"
-            value="author"
-            placeholder="🔍 Filter by author (optional)"
-            button="🔄 Get freets"
-          />
-        </div>
-      </header>
-      <section
-        v-if="$store.state.freets.length"
-      >
-        <FreetComponent
-          v-for="freet in $store.state.freets"
-          :key="freet.id"
-          :freet="freet"
-        />
-      </section>
-      <article
-        v-else
-      >
-        <h3>No freets found.</h3>
-      </article>
+      <AllFreetsTab />
     </section>
   </main>
 </template>
 
 <script>
-import FreetComponent from '@/components/Freet/FreetComponent.vue';
 import CreateFreetForm from '@/components/Freet/CreateFreetForm.vue';
-import GetFreetsForm from '@/components/Freet/GetFreetsForm.vue';
+import AllFreetsTab from '@/components/Freet/AllFreetsTab.vue';
 import CategoryTab from '@/components/Category/CategoryTab.vue';
 
 export default {
   name: 'FreetPage',
-  components: {FreetComponent, GetFreetsForm, CreateFreetForm, CategoryTab},
+  components: {CreateFreetForm, AllFreetsTab, CategoryTab},
+  data() {
+    return {
+      displayCategories: false,
+    }
+  },
   mounted() {
-    this.$refs.getFreetsForm.submit();
     if (this.$store.state.username) {
       this.$store.commit('refreshFollows');
       this.$store.commit('refreshCategories');
+    }
+  },
+  methods: {
+    setDisplayCategories(boolean) {
+      this.displayCategories = boolean;
     }
   }
 };
@@ -90,8 +80,26 @@ header, header > * {
     align-items: center;
 }
 
+div {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
 button {
     margin-right: 10px;
+    box-shadow: 0px 0px;
+    font-size: 1em;
+    background-color: rgb(233, 239, 236);
+}
+
+button:hover {
+  color: rgb(77, 183, 42);
+  transition: 0.5s;
+}
+
+button:focus {
+  color: rgb(77, 183, 42);
 }
 
 section .scrollbox {

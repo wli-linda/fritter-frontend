@@ -58,6 +58,7 @@ button {
   padding: 0.75em;
   margin: 0.5em;
   box-shadow: 1px 1px rgba(32, 81, 15, 0.779);
+  border-radius: 0.2em;
 }
 
 button:hover {
@@ -93,4 +94,11 @@ button:hover {
 .alerts .success {
     background-color: rgba(45, 135, 87, 0.667);
 }
+
+@media screen and (max-width: 999px) {
+  main {
+    padding: 0 3em 5em;
+  }
+}
+
 </style>
