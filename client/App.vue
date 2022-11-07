@@ -59,6 +59,7 @@ button {
   margin: 0.5em;
   box-shadow: 1px 1px rgba(32, 81, 15, 0.779);
   border-radius: 0.2em;
+  cursor: pointer;
 }
 
 button:hover {

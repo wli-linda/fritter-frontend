@@ -24,16 +24,19 @@
         <section v-if="this.freetsInCategory.length">
             <FreetsSection :freets="this.freetsInCategory"/>
         </section>
+
+        <CategoryPopup />
     </section>
 </template>
 
 <script>
 import CategoryButton from '@/components/Category/CategoryButton.vue';
 import FreetsSection from '@/components/Freet/FreetsSection.vue';
+import CategoryPopup from '@/components/Category/CategoryPopup.vue';
 
 export default {
     name: 'CategoryTab',
-    components: {CategoryButton, FreetsSection},
+    components: {CategoryButton, FreetsSection, CategoryPopup},
     data() {
         return {
             category: null,
