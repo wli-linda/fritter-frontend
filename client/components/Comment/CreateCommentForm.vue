@@ -22,7 +22,6 @@ export default {
         {id: 'content', label: 'Content', value: ''}
       ],
       title: 'Create a comment',
-      // refreshComments: true,
       callback: () => {
         const message = 'Successfully created a comment!';
         this.$set(this.alerts, message, 'success');

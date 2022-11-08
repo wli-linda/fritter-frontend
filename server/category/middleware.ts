@@ -58,7 +58,7 @@ const isValidCategoryModifier = async (req: Request, res: Response, next: NextFu
  */
  const isValidCategoryName = (req: Request, res: Response, next: NextFunction) => {
   const {name} = req.body as {name: string};
-  if (!name.trim()) {
+  if (!name?.trim()) {
     res.status(400).json({
       error: 'Category name must be at least one character long.'
     });

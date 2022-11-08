@@ -10,6 +10,7 @@
                 :category="category"
                 v-on:fetchFreets="handleSelectCategory"
             />
+            <CategoryPopup />
         </div>
         
         <header>
@@ -24,8 +25,6 @@
         <section v-if="this.freetsInCategory.length">
             <FreetsSection :freets="this.freetsInCategory"/>
         </section>
-
-        <CategoryPopup />
     </section>
 </template>
 
@@ -115,6 +114,7 @@ section {
 div {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
 }
 
 button {

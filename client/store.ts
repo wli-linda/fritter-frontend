@@ -77,7 +77,7 @@ const store = new Vuex.Store({
       console.log("follows", state.follows);
     },
     async refreshCategories(state) {
-      const url = `/api/categories/${state.userId}`;
+      const url = `/api/categories`;
       const res = await fetch(url).then(async r => r.json());
       state.categories = res;
       console.log("categories", state.categories);

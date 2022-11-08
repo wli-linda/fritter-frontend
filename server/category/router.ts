@@ -2,6 +2,7 @@ import type {Request, Response} from 'express';
 import express from 'express';
 import CategoryCollection from './collection';
 import FollowCollection from '../follow/collection';
+import UserCollection from '../user/collection';
 import * as userValidator from '../user/middleware';
 import * as categoryValidator from '../category/middleware';
 import * as util from './util';
@@ -66,19 +67,19 @@ const router = express.Router();
 /**
  * Get categories by author.
  *
- * @name GET /api/categories/:authorId?
+ * @name GET /api/categories/
  *
  * @return {CategoryResponse[]} - An array of categories
  * @throws {404} - If authorId is invalid
  *
  */
 router.get(
-  '/:authorId?',
+  '/',
   [
-    categoryValidator.isAuthorExists
+    userValidator.isUserLoggedIn
   ],
   async (req: Request, res: Response) => {
-    const categories = await CategoryCollection.findAllByAuthor(req.params.authorId as string);
+    const categories = await CategoryCollection.findAllByAuthor(req.session.userId as string);
     const response = categories.map(util.constructCategoryResponse);
     res.status(200).json(response);
   }
@@ -132,7 +133,8 @@ router.put(
  async (req: Request, res: Response) => {
   const operation = req.query.operation;
   const categoryId = req.params.categoryId;
-  const itemId = req.params.itemId;
+  const item = req.params.itemId;
+  const itemId = (await UserCollection.findOneByUsername(item)).id;
   var category;
   if (operation == "add") {
     category = await CategoryCollection.addItemToCategory(categoryId, itemId);
