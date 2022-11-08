@@ -37,7 +37,7 @@ const router = express.Router();
 );
 
 /**
- * Create a new category for a post.
+ * Create a new category 
  *
  * @name POST /api/categories/
  *

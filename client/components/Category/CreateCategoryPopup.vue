@@ -9,7 +9,7 @@ https://vuejs.org/guide/components/slots.html#named-slots; -->
         <button @click="togglePopup">
             {{openButton}}
         </button>
-        <span class="backdrop" id="myPopup">
+        <span class="backdrop" id="popup-createCategory">
             <span class="popupBox" >
                 <h3>
                     {{header}}
@@ -27,7 +27,7 @@ https://vuejs.org/guide/components/slots.html#named-slots; -->
                         Add followed users to custom category {{category.name}}
                     </h4>
                     <section class="formWrapper">
-                        <SelectUserComponent 
+                        <CategorySelectUserComponent 
                             v-for="follow in $store.state.follows" 
                             :username="follow" 
                             :selected="selections.includes(follow)"
@@ -45,12 +45,12 @@ https://vuejs.org/guide/components/slots.html#named-slots; -->
 </template>
 
 <script>
-import SelectUserComponent from '@/components/common/SelectUserComponent.vue';
+import CategorySelectUserComponent from '@/components/Category/CategorySelectUserComponent.vue';
 import CreateCategoryForm from '@/components/Category/CreateCategoryForm.vue';
 
 export default {
     name: "CategoryPopup",
-    components: {SelectUserComponent, CreateCategoryForm},
+    components: {CategorySelectUserComponent, CreateCategoryForm},
     data() {
         return {
             openButton: "➕",
@@ -62,10 +62,11 @@ export default {
     },
     methods: {
         togglePopup() {
-            var popup = document.getElementById("myPopup");
+            var popup = document.getElementById("popup-createCategory");
             popup.classList.toggle("show");
             this.$store.commit('refreshCategories');
-
+            this.category = null;
+            this.selections = [];
         },
         toggleSelection(username) {
             const selections = this.selections;
@@ -99,7 +100,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 100;
+    z-index: 90;
     visibility: hidden;
 }
 

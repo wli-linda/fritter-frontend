@@ -10,7 +10,8 @@
                 :category="category"
                 v-on:fetchFreets="handleSelectCategory"
             />
-            <CategoryPopup />
+            <CreateCategoryPopup />
+            <EditCategoryPopup />
         </div>
         
         <header>
@@ -31,11 +32,12 @@
 <script>
 import CategoryButton from '@/components/Category/CategoryButton.vue';
 import FreetsSection from '@/components/Freet/FreetsSection.vue';
-import CategoryPopup from '@/components/Category/CategoryPopup.vue';
+import CreateCategoryPopup from '@/components/Category/CreateCategoryPopup.vue';
+import EditCategoryPopup from '@/components/Category/EditCategoryPopup.vue';
 
 export default {
     name: 'CategoryTab',
-    components: {CategoryButton, FreetsSection, CategoryPopup},
+    components: {CategoryButton, FreetsSection, CreateCategoryPopup, EditCategoryPopup},
     data() {
         return {
             category: null,

@@ -42,10 +42,15 @@ class CategoryCollection {
    */
       static async findAllByAuthor(authorId: Types.ObjectId | string): Promise<Array<HydratedDocument<Category>>> {
         const author = await UserCollection.findOneByUserId(authorId);
-        return CategoryModel.find({authorId: author._id}).populate({
+        return CategoryModel.find({authorId: author._id}).populate([{
           path: 'authorId',
           model: 'User',
-        });
+        }, {
+          path: 'items',
+          model: 'User',
+        }
+
+      ]);
   }
 
   /**
@@ -81,7 +86,10 @@ class CategoryCollection {
         {$addToSet: {items: itemId}}
     );
     const category =  await CategoryModel.findOne({_id: categoryId});
-    return category.populate('authorId');
+    return category.populate({
+      path: 'items',
+      model: 'User',
+    });
   }
    
   /** 
@@ -98,7 +106,10 @@ class CategoryCollection {
         {$pull: {items: {$in: itemId}}}
     );
     const category =  await CategoryModel.findOne({_id: categoryId});
-    return category.populate('authorId');
+    return category.populate({
+      path: 'items',
+      model: 'User',
+    });;
   }
 
   /**

@@ -13,7 +13,7 @@ export type PopulatedCategory = {
   _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
   authorId: User;
   name: string;
-  items: Types.Array<Types.ObjectId>;
+  items: Types.Array<User>;
 };
 
 const CategorySchema = new Schema({

@@ -6,7 +6,7 @@ type CategoryResponse = {
   _id: string;
   author: string;
   name: string;
-  items: string;
+  items: Array<string>;
 };
 
 /**
@@ -23,12 +23,15 @@ const constructCategoryResponse = (category: HydratedDocument<Category>): Catego
     })
   };
   const {username} = categoryCopy.authorId;
+  const items = categoryCopy.items;
+  const itemNames = items.map(item => item.username);
   delete categoryCopy.authorId;
+  delete categoryCopy.items;
   return {
     ...categoryCopy,
     _id: categoryCopy._id.toString(),
     author: username,
-    items: categoryCopy.items.toString(),
+    items: itemNames,
   };
 };
 
