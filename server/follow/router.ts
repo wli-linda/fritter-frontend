@@ -32,6 +32,20 @@ const router = express.Router();
   }
 );
 
+router.get(
+  '/followers',
+  [
+    userValidator.isUserLoggedIn
+  ],
+  async (req: Request, res: Response) => {
+    const userId = req.session.userId as string;
+    const followers = await FollowCollection.findAllFollowersByUserId(userId);
+    const followResponse = followers.map(util.constructFollowResponse);
+    const followerUsernames = followResponse.map(follow => follow.followerUser);
+    res.status(200).json(followerUsernames);
+  }
+);
+
 /**
  * Get freets of all followed users
  *

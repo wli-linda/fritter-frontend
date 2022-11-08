@@ -75,6 +75,11 @@ class FollowCollection {
     return FollowModel.find({followerId: user._id}).populate('followerId').populate('followedId');
   }
 
+  static async findAllFollowersByUserId(userId: Types.ObjectId | string): Promise<Array<HydratedDocument<Follow>>> {
+    const user = await UserCollection.findOneByUserId(userId);
+    return FollowModel.find({followedId: user._id}).populate('followerId').populate('followedId');
+  }
+
   // /**
   //  * Get all the followed list of a user by username
   //  *

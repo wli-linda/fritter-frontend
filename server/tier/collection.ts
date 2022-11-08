@@ -18,7 +18,13 @@ class TierCollection {
             ownerId, isEnabled, timedFollowers, overrideFollowers
         });
         await tier.save();
-        return tier.populate('ownerId');
+        return tier.populate(['ownerId', {
+            path: 'timedFollowers',
+            model: 'User',
+        }, {
+            path: 'overrideFollowers',
+            model: 'User',
+        }]);
     }
 
     /** 
@@ -38,7 +44,7 @@ class TierCollection {
             {ownerId: ownerId}, 
             {$addToSet: {timedFollowers: followerId}}
         );
-        return tier.populate('ownerId');
+        return tier;
     }
 
     /** 
@@ -58,7 +64,13 @@ class TierCollection {
             {ownerId: ownerId}, 
             {$addToSet: {overrideFollowers: followerId}}
         );
-        return tier.populate('ownerId');
+        return tier.populate(['ownerId', {
+            path: 'timedFollowers',
+            model: 'User',
+        }, {
+            path: 'overrideFollowers',
+            model: 'User',
+        }]);
      }
     
     /**
@@ -75,7 +87,13 @@ class TierCollection {
         const currStatus = tier.isEnabled;
         tier.isEnabled = !currStatus;
         await tier.save()
-        return tier.populate("ownerId");
+        return tier.populate(['ownerId', {
+            path: 'timedFollowers',
+            model: 'User',
+        }, {
+            path: 'overrideFollowers',
+            model: 'User',
+        }]);
     }
 
     /**
@@ -85,17 +103,16 @@ class TierCollection {
      * @returns {Promise<HydratedDocument<Tier>> | Promise<null> } The tier system with the given ownerId, if any
      */
     static async findOneByOwner(ownerId: Types.ObjectId | string): Promise<HydratedDocument<Tier>> {
-        return TierModel.findOne({ownerId: ownerId}).populate('ownerId');
+        return TierModel.findOne({ownerId: ownerId}).populate(['ownerId', {
+            path: 'timedFollowers',
+            model: 'User',
+        }, {
+            path: 'overrideFollowers',
+            model: 'User',
+        }]);
     }
 
     // https://www.mongodb.com/docs/manual/reference/operator/query-logical/
-    /**
-     * Find a tier by ownerId
-     * 
-     * @param {string} ownerId - The id of the owner of the tier system
-     * @param {string} followerId - The id of the follower to be checked 
-     * @returns {Promise<HydratedDocument<Tier>> | Promise<null> } The tier system with the given ownerId, if any
-     */
      static async findFollowerInSystem(ownerId: Types.ObjectId | string, followerId: Types.ObjectId | string): Promise<boolean> {
         const tier = await TierModel.findOne({
             $and: [
@@ -153,7 +170,13 @@ class TierCollection {
              {$pull: {overrideFollowers: {$in: followerId}}}
          )
          const tier =  await TierModel.findOne({ownerId: ownerId}).populate("ownerId");
-         return tier;
+         return tier.populate(['ownerId', {
+            path: 'timedFollowers',
+            model: 'User',
+        }, {
+            path: 'overrideFollowers',
+            model: 'User',
+        }]);
      }
 }
 

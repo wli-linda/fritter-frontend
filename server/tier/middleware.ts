@@ -1,5 +1,6 @@
 import type {Request, Response, NextFunction} from 'express';
 import {Types} from 'mongoose';
+import UserCollection from '../user/collection';
 import TierCollection from '../tier/collection';
 
 
@@ -7,12 +8,13 @@ import TierCollection from '../tier/collection';
  * Checks if a tier with ownerId matching req.params.followedId exists
  */
  const isTierExists = async (req: Request, res: Response, next: NextFunction) => {
-  const validFormat = Types.ObjectId.isValid(req.params.followedId);
-  const tier = validFormat ? await TierCollection.findOneByOwner(req.params.followedId) : '';
+  const ownerId = (await UserCollection.findOneByUsername(req.params.followedId as string))._id;
+  const validFormat = Types.ObjectId.isValid(ownerId);
+  const tier = validFormat ? await TierCollection.findOneByOwner(ownerId) : '';
   if (!tier || !tier.isEnabled) {
     res.status(412).json({
       error: {
-        tierNotFound: `Tier with owner ID ${req.params.followedId} does not exist.`
+        tierNotFound: `Tier with owner ${req.params.followedId} does not exist.`
       }
     });
     return;
@@ -25,12 +27,13 @@ import TierCollection from '../tier/collection';
  * Checks if a tier with ownerId matching req.params.followedId is enabled
  */
 const isTierEnabledForUser = async (req: Request, res: Response, next: NextFunction) => {
-  const validFormat = Types.ObjectId.isValid(req.params.followedId);
-  const tier = validFormat ? await TierCollection.findOneByOwner(req.params.followedId) : ''; // should always follow isTierExists
+  const ownerId = (await UserCollection.findOneByUsername(req.params.followedId as string))._id;
+  const validFormat = Types.ObjectId.isValid(ownerId);
+  const tier = validFormat ? await TierCollection.findOneByOwner(ownerId) : ''; // should always follow isTierExists
   if (!tier || !tier.isEnabled) {
     res.status(412).json({
       error: {
-        tierNotFound: `Tier with owner ID ${req.params.followedId} is not enabled.`
+        tierNotFound: `Tier with owner ${req.params.followedId} is not enabled.`
       }
     });
     return;
@@ -43,8 +46,8 @@ const isTierEnabledForUser = async (req: Request, res: Response, next: NextFunct
  * Checks if the current user matches the followedId in req.params
  */
 const isValidTierModifier = async (req: Request, res: Response, next: NextFunction) => {
-  const userId = req.params.followedId;
-  if (req.session.userId !== userId.toString()) {
+  const ownerId = (await UserCollection.findOneByUsername(req.params.followedId as string))._id;
+  if (req.session.userId !== ownerId.toString()) {
     res.status(403).json({
       error: 'Cannot modify other users\' tiers.'
     });

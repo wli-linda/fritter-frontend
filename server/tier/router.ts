@@ -1,5 +1,6 @@
 import type {Request, Response} from 'express';
 import express from 'express';
+import UserCollection from '../user/collection';
 import TierCollection from './collection';
 import * as userValidator from '../user/middleware';
 import * as followValidator from '../follow/middleware';
@@ -7,6 +8,23 @@ import * as tierValidator from '../tier/middleware';
 import * as util from './util';
 
 const router = express.Router();
+
+router.get(
+  '/status',
+  [
+    userValidator.isUserLoggedIn,
+  ],
+  async (req: Request, res: Response) => {
+    const ownerId = req.session.userId as string;
+    const tier = await TierCollection.findOneByOwner(ownerId);
+    if (tier) {
+      const response = util.constructTierResponse(tier);
+      res.status(200).json(response);
+    } else {
+      res.status(200).json(tier);
+    }
+  }
+);
 
 /**
  * Enable/disable a user's Tiered Followers System
@@ -51,8 +69,8 @@ router.get(
     tierValidator.isTierEnabledForUser,
   ],
   async (req: Request, res: Response) => {
-    const followerId = req.params.followerId;
-    const ownerId = req.params.followedId as string;
+    const followerId = (await UserCollection.findOneByUsername(req.params.followerId as string))._id;
+    const ownerId = (await UserCollection.findOneByUsername(req.params.followedId as string))._id;
     const tierStatus = await TierCollection.findFollowerInSystem(ownerId, followerId);
     res.status(200).json({
       message: `User ${followerId} is ${tierStatus ? '' : 'not '}a tiered follower of user ${ownerId}.`,
@@ -87,8 +105,8 @@ router.put(
   ],
  async (req: Request, res: Response) => {
   const operation = req.query.operation;
-  const followerId = req.params.followerId;
-  const ownerId = req.params.followedId;
+  const followerId = (await UserCollection.findOneByUsername(req.params.followerId as string))._id;
+  const ownerId = (await UserCollection.findOneByUsername(req.params.followedId as string))._id;
   var tier;
   if (operation == "add") {
     tier = await TierCollection.addToOverrideFollowers(ownerId, followerId);

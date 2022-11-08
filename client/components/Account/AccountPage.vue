@@ -10,6 +10,17 @@
       <ChangeUsernameForm />
       <ChangePasswordForm />
     </section>
+
+    <section>
+      <header>
+        <h2>
+          Tiered followers system
+        </h2>
+      </header>
+      <ToggleTierForm />
+      <EditTierForm />
+    </section>
+
     <section>
       <header>
         <h2>Account management</h2>
@@ -25,6 +36,8 @@ import ChangeUsernameForm from '@/components/Account/ChangeUsernameForm.vue';
 import ChangePasswordForm from '@/components/Account/ChangePasswordForm.vue';
 import DeleteAccountForm from '@/components/Account/DeleteAccountForm.vue';
 import LogoutForm from '@/components/Account/LogoutForm.vue';
+import ToggleTierForm from '@/components/Tier/ToggleTierForm.vue';
+import EditTierForm from '@/components/Tier/EditTierForm.vue';
 
 export default {
   name: 'AccountPage',
@@ -32,7 +45,12 @@ export default {
     ChangeUsernameForm,
     ChangePasswordForm,
     DeleteAccountForm,
-    LogoutForm
-  }
+    LogoutForm,
+    ToggleTierForm,
+    EditTierForm
+  },
+  mounted() {
+    this.$store.commit('refreshTier');
+  },
 };
 </script>

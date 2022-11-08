@@ -6,8 +6,8 @@ type TierResponse = {
   _id: string; 
   owner: string;
   isEnabled: boolean;
-  timedFollowers: string;
-  overrideFollowers: string;
+  timedFollowers: Array<string>;
+  overrideFollowers: Array<string>;
 };
 
 /**
@@ -25,12 +25,17 @@ const constructTierResponse = (tier: HydratedDocument<Tier>): TierResponse => {
   };
   const owner = tierCopy.ownerId;
   delete tierCopy.ownerId;
+  const timedFollowers = tierCopy.timedFollowers.map(follower => follower.username);
+  const overrideFollowers = tierCopy.overrideFollowers.map(follower => follower.username);
+  delete tierCopy.timedFollowers;
+  delete tierCopy.overrideFollowers;
+
   return {
     ...tierCopy,
     _id: tierCopy._id.toString(),
     owner: owner.username,
-    timedFollowers: tierCopy.timedFollowers.toString(),
-    overrideFollowers: tierCopy.overrideFollowers.toString(),
+    timedFollowers: timedFollowers,
+    overrideFollowers: overrideFollowers,
   };
 };
 

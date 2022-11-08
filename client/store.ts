@@ -14,7 +14,9 @@ const store = new Vuex.Store({
     username: null, // Username of the logged in user
     userId: null, // MongoDB object ID of the logged in user
     follows: [], // All users the logged in user follows
+    followers: [],
     categories: [], // All categories the logged in user has created
+    tier: null,
     alerts: {} // global success/error messages encountered during submissions to non-visible forms
   },
   mutations: {
@@ -76,11 +78,24 @@ const store = new Vuex.Store({
       state.follows = res;
       console.log("follows", state.follows);
     },
+    async refreshFollowers(state) {
+      const url = '/api/follows/followers';
+      const res = await fetch(url).then(async r => r.json());
+      state.followers = res;
+      console.log("followers", state.followers);
+    },
     async refreshCategories(state) {
       const url = `/api/categories`;
       const res = await fetch(url).then(async r => r.json());
       state.categories = res;
       console.log("categories", state.categories);
+    },
+    async refreshTier(state) {
+      const url = '/api/tiers/status';
+      const res = await fetch(url).then(async r => 
+        r ? r.json() : null);
+      state.tier = res;
+      console.log("tier ", state.tier);
     }
   },
   // Store data across page refreshes, only discard on browser close

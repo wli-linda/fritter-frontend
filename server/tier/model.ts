@@ -15,8 +15,8 @@ export type PopulatedTier = {
   _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
   ownerId: User;
   isEnabled: boolean;
-  timedFollowers: Types.Array<Types.ObjectId>;
-  overrideFollowers: Types.Array<Types.ObjectId>;
+  timedFollowers: Types.Array<User>;
+  overrideFollowers: Types.Array<User>;
 };
 
 const TierSchema = new Schema({
